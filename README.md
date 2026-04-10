@@ -1,2 +1,2 @@
-# repo-pour-rendu-final
-repo pour le rendu final
+# Groupe Mahaut Maurel, Gabriel Stremsdoerfer, Gustave Billon
+
