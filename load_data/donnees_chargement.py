@@ -13,3 +13,13 @@ def load_sujet_tele():
     sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes) 
     sujet_tele['Date'] = pd.to_datetime(sujet_tele['Date'], dayfirst= True)
     return sujet_tele
+
+
+def load_parite():
+    url_parite = "https://static.data.gouv.fr/resources/temps-de-parole-des-hommes-et-des-femmes-a-la-television-et-a-la-radio/20190312-191033/20190308-stats.csv"
+    req = requests.get(url_parite)
+    with open('temp.csv', 'w', encoding='utf-8') as f:
+        f.write(req.text.encode('latin-1').decode('utf-8'))
+    parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
+    parite['date'] = pd.to_datetime(parite['date'])
+    return parite
