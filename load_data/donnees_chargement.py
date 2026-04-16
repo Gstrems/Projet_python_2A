@@ -14,6 +14,8 @@ def load_sujet_tele():
     os.remove('temp.csv')
     sujet_tele = sujet_tele.drop(columns=['Vide'])
     sujet_tele['Date'] = pd.to_datetime(sujet_tele['Date'], dayfirst= True)
+    sujet_tele['Temps_total_JT'] = sujet_tele.groupby(['Date','Chaîne'])['Duree_sec'].transform(sum)
+    sujet_tele['Prop']=sujet_tele['Duree_sec']/sujet_tele['Temps_total_JT']
     return sujet_tele
 
 
