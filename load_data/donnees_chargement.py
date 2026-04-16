@@ -46,4 +46,12 @@ def load_audience():
                          header = 1
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
+    sujet_tele = load_sujet_tele()
+    audience = audience.loc[:, audience.columns.isin(
+        audience.columns[
+            (audience.columns.isin(sujet_tele["Chaîne"].unique()))
+            | (audience.columns.isin(['Annee']))
+        ]
+        )
+    ]
     return audience
