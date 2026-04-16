@@ -52,7 +52,6 @@ def load_audience():
                          header = 1
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
-    os.remove('temp.csv')
     sujet_tele = load_sujet_tele()
     audience = audience.loc[:, audience.columns.isin(
         audience.columns[
