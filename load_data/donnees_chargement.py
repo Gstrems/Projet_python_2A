@@ -22,6 +22,8 @@ def load_parite():
         f.write(req.text.encode('latin-1').decode('utf-8'))
     parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
     parite['date'] = pd.to_datetime(parite['date'])
+    sujet_tele = load_sujet_tele()
+    parite = parite[parite['channel_name'].isin(sujet_tele['Chaîne'].unique())]
     return parite
 
 def load_audience():
@@ -33,5 +35,6 @@ def load_audience():
                          sheet_name='PartdAudience',
                          skiprows=5,
                          header = 1
-                        ).rename(columns={audience.columns[0]: 'Annee'})
+                        )
+    audience = audience.rename(columns={audience.columns[0]: 'Annee'})
     return audience
