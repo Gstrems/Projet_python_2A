@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import os
 
 
 def load_sujet_tele():
@@ -9,7 +10,8 @@ def load_sujet_tele():
     colonnes = ["Date", "Chaîne","Vide", "Thématique", "Nb_sujets", "Duree_sec"]
     with open('temp.csv', 'w', encoding='latin-1') as f:
         f.write(req.text)
-    sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes) 
+    sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes)
+    os.remove('temp.csv')
     sujet_tele = sujet_tele.drop(columns=['Vide'])
     sujet_tele['Date'] = pd.to_datetime(sujet_tele['Date'], dayfirst= True)
     return sujet_tele
@@ -21,6 +23,7 @@ def load_parite():
     with open('temp.csv', 'w', encoding='utf-8') as f:
         f.write(req.text.encode('latin-1').decode('utf-8'))
     parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
+    os.remove('temp.csv')
     parite['date'] = pd.to_datetime(parite['date'])
     parite = parite[parite['channel_code'].isin(['TF1', 'M6', 'FR2', 'FR3', 'ART'])]
     parite['week_day_number'] = parite['week_day'].replace({
@@ -46,6 +49,7 @@ def load_audience():
                          header = 1
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
+    os.remove('temp.csv')
     sujet_tele = load_sujet_tele()
     audience = audience.loc[:, audience.columns.isin(
         audience.columns[
