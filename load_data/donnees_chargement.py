@@ -23,3 +23,15 @@ def load_parite():
     parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
     parite['date'] = pd.to_datetime(parite['date'])
     return parite
+
+def load_audience():
+    url_audience = "http://www.cnc.fr/c/document_library/get_file?uuid=ac00e68f-871d-4129-ba90-977c84484bdd&groupId=18"
+    req = requests.get(url_audience)
+    with open('temp.xlsx', 'wb') as f:
+        f.write(req.content)
+    audience = pd.read_excel('temp.xlsx',
+                         sheet_name='PartdAudience',
+                         skiprows=5,
+                         header = 1
+                        ).rename(columns={audience.columns[0]: 'Annee'})
+    return audience
