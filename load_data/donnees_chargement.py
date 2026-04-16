@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 import os
+import numpy as np
 
 
 def load_sujet_tele():
@@ -58,6 +59,7 @@ def load_audience():
         ]
         )
     ]
+    audience = audience.replace("-", np.nan, inplace=True)
     audience = audience.drop(index=[36,37,38,39])
     audience["Annee"] = audience["Annee"].astype(int)
     return audience
