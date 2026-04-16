@@ -11,4 +11,5 @@ def load_sujet_tele():
     with open('temp.csv', 'w', encoding='latin-1') as f:
         f.write(req.text)
     sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes) 
+    sujet_tele['Date'] = pd.to_datetime(sujet_tele['Date'], dayfirst= True)
     return sujet_tele
