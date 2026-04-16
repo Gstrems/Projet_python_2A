@@ -36,11 +36,6 @@ def load_audience():
                          sheet_name='PartdAudience',
                          skiprows=5,
                          header = 1
-<<<<<<< HEAD
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
     return audience
-=======
-                        ).rename(columns={audience.columns[0]: 'Annee'})
-    return audience
->>>>>>> 9ce8dc16a8578e82c163e60f99a21761fdd7e7a1
