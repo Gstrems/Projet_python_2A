@@ -23,3 +23,4 @@ def load_parite():
     parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
     parite['date'] = pd.to_datetime(parite['date'])
     return parite
+
