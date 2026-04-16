@@ -58,4 +58,6 @@ def load_audience():
         ]
         )
     ]
+    audience = audience.drop(index=[36,37,38,39])
+    audience["Annee"] = audience["Annee"].astype(int)
     return audience
