@@ -208,3 +208,4 @@ __marimo__/
 
 #avoid csv
 *.csv
+*.xlsx
