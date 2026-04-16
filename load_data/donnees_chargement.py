@@ -6,7 +6,6 @@ def load_sujet_tele():
     url_sujet_tele = "https://static.data.gouv.fr/resources/classement-thematique-des-sujets-de-journaux-televises-janvier-2000-decembre-2020/20241015-124725/ina-barometre-jt-tv-donnees-quotidiennes-2000-2020-nbre-sujets-durees-202410.csv"
     requests.get(url_sujet_tele)
     req = requests.get(url_sujet_tele)
-    print(req.content[:20])
     colonnes = ["Date", "Chaîne","Vide", "Thématique", "Nb_sujets", "Duree_sec"]
     with open('temp.csv', 'w', encoding='latin-1') as f:
         f.write(req.text)
@@ -23,9 +22,18 @@ def load_parite():
         f.write(req.text.encode('latin-1').decode('utf-8'))
     parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
     parite['date'] = pd.to_datetime(parite['date'])
-    sujet_tele = load_sujet_tele()
-    parite = parite[parite['channel_name'].isin(sujet_tele['Chaîne'].unique())]
+    parite = parite[parite['channel_code'].isin(['TF1', 'M6', 'FR2', 'FR3', 'ART'])]
+    parite['week_day_number'] = parite['week_day'].replace({
+        'Monday': 1,
+        'Tuesday': 2,
+        'Wednesday': 3,
+        'Thursday': 4,
+        'Friday': 5,
+        'Saturday': 6,
+        'Sunday': 7
+    })
     return parite
+
 
 def load_audience():
     url_audience = "http://www.cnc.fr/c/document_library/get_file?uuid=ac00e68f-871d-4129-ba90-977c84484bdd&groupId=18"
@@ -38,4 +46,12 @@ def load_audience():
                          header = 1
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
+    sujet_tele = load_sujet_tele()
+    audience = audience.loc[:, audience.columns.isin(
+        audience.columns[
+            (audience.columns.isin(sujet_tele["Chaîne"].unique()))
+            | (audience.columns.isin(['Annee']))
+        ]
+        )
+    ]
     return audience
