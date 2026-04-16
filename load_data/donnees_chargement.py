@@ -11,6 +11,7 @@ def load_sujet_tele():
     with open('temp.csv', 'w', encoding='latin-1') as f:
         f.write(req.text)
     sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes) 
+    sujet_tele = sujet_tele.drop(columns=['Vide'])
     sujet_tele['Date'] = pd.to_datetime(sujet_tele['Date'], dayfirst= True)
     return sujet_tele
 
@@ -35,6 +36,11 @@ def load_audience():
                          sheet_name='PartdAudience',
                          skiprows=5,
                          header = 1
+<<<<<<< HEAD
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
     return audience
+=======
+                        ).rename(columns={audience.columns[0]: 'Annee'})
+    return audience
+>>>>>>> 9ce8dc16a8578e82c163e60f99a21761fdd7e7a1

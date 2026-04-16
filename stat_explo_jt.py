@@ -3,4 +3,5 @@ from load_data.donnees_chargement import load_sujet_tele
 
 sujet_tele = load_sujet_tele()
 #on calcule le temps total du JT de chaque jour pour chaque chaîne:
-sujet_tele['Temps_total_JT'] = sujet_tele.groupby(['Date'], ['Chaîne']).sum()
+sujet_tele['Temps_total_JT'] = sujet_tele.groupby(['Date','Chaîne'])['Temps_total_JT'].transform(sum)
+
