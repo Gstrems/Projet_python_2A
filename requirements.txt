@@ -5,3 +5,4 @@ matplotlib
 seaborn
 great_tables
 numpy
+scipy
