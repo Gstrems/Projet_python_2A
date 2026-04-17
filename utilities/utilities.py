@@ -174,12 +174,12 @@ def evolution_audience_sujet_chaine(df, sujet, chaine,
 # Fonctions de la table sujet_tele///audience
 ######################################################################################################
 
-def correlation_theme_audience(df: pd.DataFrame,
+def correlation_theme_audience(df: pd.DataFrame = None,
                                Thematique: str = "Thématique",
-                               Date: str = "Date",
                                Chaine: str = "Chaîne",
                                Temps: str = "Temps moyen",
-                               Audience: str = "Audience"):
+                               Audience: str = "Audience",
+                               corr = None):
     """
     Calcule la corrélation entre le temps moyen et l'audience pour chaque thématique et chaque chaîne,
     puis affiche une heatmap de ces corrélations.
@@ -199,18 +199,25 @@ def correlation_theme_audience(df: pd.DataFrame,
     Audience : str
         Le nom de la colonne représentant l'audience.
     """
-    df_filtre = df.groupby([Thematique,Date,Chaine])[[Temps, Audience]].mean()
-    df_filtre[Audience] = df_filtre[Audience].astype(float)
+    # S'assure que les colonnes Temps et Audience sont de
+    # type numérique pour le calcul de la corrélation
+    if df is not None:
+        df[Temps] = df[Temps].astype(float)
+        df[Audience] = df[Audience].astype(float)
 
-    # Récupère la corrélation entre chaque temps moyen et audience en fonction de la thématique et de la chaîne
-    corr = df_filtre.groupby([Thematique, Chaine]).apply(
-        lambda g: 
-                 g[Temps].corr(g[Audience])
-        )
-    # Transforme la série de corrélation en DataFrame et 
-    # pivote pour avoir les thématiques en index et les chaînes en colonnes
-    corr = corr.reset_index(name="corr").pivot(index=Thematique, columns=Chaine, values="corr") 
+    # Récupère la corrélation entre chaque temps moyen et 
+    # audience en fonction de la thématique et de la chaîne
+    if corr is None:
+        corr = df.groupby([Thematique, Chaine]).apply(
+            lambda g: 
+                     g[Temps].corr(g[Audience])
+            )
+        # Transforme la série de corrélation en DataFrame et 
+        # pivote pour avoir les thématiques en index et les chaînes en colonnes
+        corr = corr.reset_index(name="corr").pivot(index=Thematique, columns=Chaine, values="corr") 
 
+    if df is None and corr is None:
+        raise ValueError("Vous devez fournir soit un DataFrame pour calculer la corrélation, soit une matrice de corrélation pré-calculée.")
     # Création de la visualisation de la corrélation
     
     plt.figure(figsize=(10, 8))
