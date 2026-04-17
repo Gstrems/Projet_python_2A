@@ -214,5 +214,5 @@ def correlation_theme_audience(df: pd.DataFrame,
     
     plt.figure(figsize=(10, 8))
     sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",)
-    plt.title("Temps moyen et audience moyens par thématique")
+    plt.title(f"Corrélation entre {Temps} de diffusion au JT et audience moyenne par thématique")
     plt.show()
