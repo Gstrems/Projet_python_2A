@@ -1,6 +1,12 @@
 # Contient les fonctions utilitaires pour le projet
 
 ######################################################################################################
+# Chargement des packages
+######################################################################################################
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+######################################################################################################
 # Fonctions de la table sujet_tele
 ######################################################################################################
 def sujet_convert(indic,
@@ -46,8 +52,6 @@ def sujet_convert(indic,
 ######################################################################################################
 # Fonctions de la table audience
 ######################################################################################################
-
-import matplotlib.pyplot as plt
 
 def audience_par_annee(audience,annee, chaine):
     """
@@ -164,3 +168,51 @@ def evolution_audience_sujet_chaine(df, sujet, chaine,
                               chaine1 = Audience,
                               chaine2 = Temps,
                               titre = f"{Temps} de {sujet} sur {chaine}")
+
+######################################################################################################
+# Fonctions de la table sujet_tele///audience
+######################################################################################################
+
+def correlation_theme_audience(df: pd.DataFrame,
+                               Thematique: str = "Thématique",
+                               Date: str = "Date",
+                               Chaine: str = "Chaîne",
+                               Temps: str = "Temps moyen",
+                               Audience: str = "Audience"):
+    """
+    Calcule la corrélation entre le temps moyen et l'audience pour chaque thématique et chaque chaîne,
+    puis affiche une heatmap de ces corrélations.
+    
+    Paramètres:
+    -----------
+    df : pd.DataFrame
+        Le DataFrame contenant les données à analyser.
+    Thematique : str
+        Le nom de la colonne représentant les thématiques.
+    Date : str
+        Le nom de la colonne représentant les dates.
+    Chaine : str
+        Le nom de la colonne représentant les chaînes.
+    Temps_moyen : str
+        Le nom de la colonne représentant le temps moyen ou le temps cumulé.
+    Audience : str
+        Le nom de la colonne représentant l'audience.
+    """
+    df_filtre = df.groupby([Thematique,Date,Chaine])[[Temps, Audience]].mean()
+    df_filtre[Audience] = df_filtre[Audience].astype(float)
+
+    # Récupère la corrélation entre chaque temps moyen et audience en fonction de la thématique et de la chaîne
+    corr = df_filtre.groupby([Thematique, Chaine]).apply(
+        lambda g: 
+                 g[Temps].corr(g[Audience])
+        )
+    # Transforme la série de corrélation en DataFrame et 
+    # pivote pour avoir les thématiques en index et les chaînes en colonnes
+    corr = corr.reset_index(name="corr").pivot(index=Thematique, columns=Chaine, values="corr") 
+
+    # Création de la visualisation de la corrélation
+    
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",)
+    plt.title("Temps moyen et audience moyens par thématique")
+    plt.show()
