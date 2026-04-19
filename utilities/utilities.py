@@ -170,6 +170,93 @@ def evolution_audience_sujet_chaine(df, sujet, chaine,
                               chaine2 = Temps,
                               titre = f"{Temps} de {sujet} sur {chaine}")
 
+
+######################################################################################################
+# Fonctions de la table parité
+######################################################################################################
+
+def parite_var_chaine(df, variable: str):
+    """
+    Renvoie un dataframe contenant pour chaque chaîne et pour chaque valeur de la variable variable
+    le temps de parole féminin, masculin, ainsi que la proportion du temps de parole féminin.
+    
+    Paramètres:
+    ------------
+        df: pd.DataFrame
+            Le DataFrame contenant les données de temps de parole hommes / femmes à la télévision.
+        variable: str
+           La variable selon laquelle regrouper les temps de parole.
+    """
+
+    parite_variable_chaine = df.groupby(['channel_code', variable]).agg(
+        channel_name = ('channel_name', 'first'),
+        female_duration = ('female_duration', 'sum'),
+        male_duration = ('male_duration', 'sum')
+    ).reset_index()
+
+    parite_variable_chaine['proportion_female'] = parite_variable_chaine['female_duration'] / (parite_variable_chaine['female_duration'] + parite_variable_chaine['male_duration'])
+
+    return parite_variable_chaine
+
+def diagramme_temps_parole_var(df, variable: str, code_chaine: str, label: str):
+    """
+    Affiche sous forme de diagramme en barres la proportion de temps de parole féminin pour la chaîne
+    code_chaine et pour chaque valeur de la variable variable.
+   
+    Paramètres:
+    ------------
+        df: pd.DataFrame
+            Le DataFrame contenant les données de temps de parole hommes / femmes à la télévision.
+        variable: str
+           La variable selon laquelle regrouper les temps de parole.
+        code_chaine: str
+            Le code de la chaine à considérer
+        label: str
+            Le nom de la variable à regarder, tel qu'il apparaîtra sur le diagramme.
+    """
+
+
+    parite_variable_chaine = parite_var_chaine(df=df, variable=variable)
+    parite_variable = parite_variable_chaine[
+        parite_variable_chaine['channel_code'] == code_chaine
+    ].reset_index()
+    diag = parite_variable.sort_values(by=variable).plot.bar(
+        x = variable,
+        y = 'proportion_female',
+        title = "Temps de parole féminin par " + label + " pour la chaîne " + parite_variable['channel_name'][0],
+        legend=False,
+        xlabel=label,
+        ylabel="Part de temps de parole féminin",
+        grid=True
+    )
+    
+    diag.xaxis.grid(False)
+
+def diagramme_temps_parole_evolution(df, code_chaine:str):
+    """
+    Affiche sous forme de diagramme en ligne
+    l'évolution de la proportion de temps de parole féminin
+    pour la chaîne code_chaine.
+   
+    Paramètres:
+    ------------
+        df: pd.DataFrame
+            Le DataFrame contenant les données de temps de parole hommes / femmes à la télévision par mois et chaîne.
+        code_chaine: str
+            Le code de la chaine à considérer
+    """
+
+    parite_evolution = df[
+        df['channel_code'] == code_chaine
+    ].reset_index()
+
+    diag = parite_evolution.set_index('monthly_date')['proportion_female'].plot(
+        title = "Temps de parole féminin par mois pour la chaîne " + parite_evolution['channel_name'][0],
+        legend=False,
+        xlabel="Mois",
+        ylabel="Part de temps de parole féminin",
+    )
+
 ######################################################################################################
 # Fonctions de la table sujet_tele///audience
 ######################################################################################################
@@ -224,3 +311,4 @@ def correlation_theme_audience(df: pd.DataFrame = None,
     sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",)
     plt.title(f"Corrélation entre {Temps} de diffusion au JT et {Audience} moyenne par {Thematique} par année et par chaîne")
     plt.show()
+
