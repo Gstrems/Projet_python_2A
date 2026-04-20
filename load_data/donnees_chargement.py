@@ -1,18 +1,22 @@
 import pandas as pd
 import requests
+import os
+import numpy as np
 
 
 def load_sujet_tele():
     url_sujet_tele = "https://static.data.gouv.fr/resources/classement-thematique-des-sujets-de-journaux-televises-janvier-2000-decembre-2020/20241015-124725/ina-barometre-jt-tv-donnees-quotidiennes-2000-2020-nbre-sujets-durees-202410.csv"
     requests.get(url_sujet_tele)
     req = requests.get(url_sujet_tele)
-    print(req.content[:20])
     colonnes = ["Date", "Chaîne","Vide", "Thématique", "Nb_sujets", "Duree_sec"]
     with open('temp.csv', 'w', encoding='latin-1') as f:
         f.write(req.text)
-    sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes) 
+    sujet_tele = pd.read_csv('temp.csv', sep=';', encoding='latin-1', header=None, names=colonnes)
+    os.remove('temp.csv')
     sujet_tele = sujet_tele.drop(columns=['Vide'])
     sujet_tele['Date'] = pd.to_datetime(sujet_tele['Date'], dayfirst= True)
+    sujet_tele['Temps_total_JT'] = sujet_tele.groupby(['Date','Chaîne'])['Duree_sec'].transform(sum)
+    sujet_tele['Prop'] = sujet_tele['Duree_sec']/sujet_tele['Temps_total_JT']
     return sujet_tele
 
 
@@ -22,10 +26,11 @@ def load_parite():
     with open('temp.csv', 'w', encoding='utf-8') as f:
         f.write(req.text.encode('latin-1').decode('utf-8'))
     parite = pd.read_csv('temp.csv', sep=',', encoding='utf-8', header=0)
+    os.remove('temp.csv')
     parite['date'] = pd.to_datetime(parite['date'])
-    sujet_tele = load_sujet_tele()
-    parite = parite[parite['channel_name'].isin(sujet_tele['Chaîne'].unique())]
+    parite = parite[parite['channel_code'].isin(['TF1', 'M6', 'FR2', 'FR3', 'ART'])]
     return parite
+
 
 def load_audience():
     url_audience = "http://www.cnc.fr/c/document_library/get_file?uuid=ac00e68f-871d-4129-ba90-977c84484bdd&groupId=18"
@@ -46,4 +51,7 @@ def load_audience():
         ]
         )
     ]
+    audience = audience.replace("-", np.nan, inplace=True)
+    audience = audience.drop(index=[36,37,38,39])
+    audience["Annee"] = audience["Annee"].astype(int)
     return audience
