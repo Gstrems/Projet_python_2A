@@ -36,6 +36,7 @@ def load_audience():
     req = requests.get("http://www.cnc.fr/c/document_library/get_file?uuid=ac00e68f-871d-4129-ba90-977c84484bdd&groupId=18")
     with open('temp.xlsx', 'wb') as f:
         f.write(req.content)
+    os.remove('temp.xlsx')
     audience = pd.read_excel('temp.xlsx',
                          sheet_name='PartdAudience',
                          skiprows=5,
