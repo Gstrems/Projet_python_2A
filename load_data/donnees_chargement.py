@@ -33,8 +33,7 @@ def load_parite():
 
 
 def load_audience():
-    url_audience = "http://www.cnc.fr/c/document_library/get_file?uuid=ac00e68f-871d-4129-ba90-977c84484bdd&groupId=18"
-    req = requests.get(url_audience)
+    req = requests.get("http://www.cnc.fr/c/document_library/get_file?uuid=ac00e68f-871d-4129-ba90-977c84484bdd&groupId=18")
     with open('temp.xlsx', 'wb') as f:
         f.write(req.content)
     audience = pd.read_excel('temp.xlsx',
@@ -43,6 +42,12 @@ def load_audience():
                          header = 1
                         )
     audience = audience.rename(columns={audience.columns[0]: 'Annee'})
+    audience = audience.drop(index=[36,37,38,39])
+    audience["Annee"] = audience["Annee"].astype(int)
+    audience.replace("-", np.nan, inplace=True)
+
+    # Conserve uniquement les chaînes présentes dans
+    # le dataset sujet_tele
     sujet_tele = load_sujet_tele()
     audience = audience.loc[:, audience.columns.isin(
         audience.columns[
@@ -51,7 +56,4 @@ def load_audience():
         ]
         )
     ]
-    audience = audience.replace("-", np.nan, inplace=True)
-    audience = audience.drop(index=[36,37,38,39])
-    audience["Annee"] = audience["Annee"].astype(int)
     return audience

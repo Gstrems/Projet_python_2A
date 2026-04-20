@@ -54,21 +54,6 @@ def sujet_convert(indic,
 # Fonctions de la table audience
 ######################################################################################################
 
-def audience_par_annee(audience,annee, chaine):
-    """
-    Affiche l'audience d'une chaîne de télévision en fonction de l'année.
-
-    Paramètres :
-    -------------
-    audience : DataFrame
-        le DataFrame contenant les données d'audience
-    annee : str
-        le nom de la colonne contenant les années
-    chaine : str
-        le nom de la chaîne de télévision dont on veut afficher l'audience
-    """
-    audience.plot(x=annee, y=chaine, kind="line", title=f"Audience de {chaine} en fonction de l'année")
-
 def comparaison_audience(audience, annee, chaines):
     """
     Affiche la comparaison de l'audience de deux chaînes de télévision en fonction de l'année.
