@@ -26,9 +26,9 @@ Conclusion : Seule la thématique "Sport" est corrélée à la répartition de l
 
 ## Les données utilisées : 
 la source de nos données provient de 3 tables toutes issues du site data.gouv et dont on donne un bref aperçu ci-dessous.
-1. la table <b>"sujet_tele"<b>: indique le temps en secondes et la thématique des sujets abordés aux JT du soir de différentes chaînes entre janvier 2000 et décembre 2020. Pour ce jeu de données, nous avons fait l'hypothèse que les colonnes 5 et 6 représentent respectivement le nombre de sujets au JT et le temps total des sujets en seconde. Cela est cohérent avec la durée approximative d'un journal télévisé.
-2. la table <b>"audience"<b>: indique la part d'audience des chaînes entre 1989 et 2020
-3. la table <b>"parite"<b>: indique la part de temps de parole des femmes et des hommes ainsi que le temps de musique , le tout selon les chaînes, le jour et l'heure de diffusion  entre janvier 2010 et février 2019
+1. la table <b>"sujet_tele"<b>: indique le temps en secondes ('Duree_sec')et la thématique ('Thématique') des sujets abordés aux JT du soir de différentes chaînes entre janvier 2000 et décembre 2020. À noter que les label des colonnes est de notre fait, ceux-ci n'étant pas disponibles à l'origine dans la table en ligne. Nous avons notamment pour 'Duree_sec' supposé qu'il s'agissait effectivement du temps total en seconde de l'émission, en ayant vérifié pour quelques modalités si les durées correspondaient bien aux rediffusions des JT que nous avons trouvé. 
+2. la table <b>"audience"<b>: indique la part d'audience des chaînes entre 1989 et 2020 (chaque colonne correspond à une chaîne).
+3. la table <b>"parite"<b>: indique la part de temps de parole des femmes ('female_duration') et des hommes ('male_duration') ainsi que le temps de musique ('music_duration), le tout selon les chaînes, le jour et l'heure de diffusion  entre janvier 2010 et février 2019.
 
 Toutes ces tables proviennent du site data.gouv et leur chargement est opéré via un lien url.
 Un traitement préalable des données pour les rendre exploitables a été mené et se trouve en première partie de rapport.
