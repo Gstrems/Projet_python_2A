@@ -1,4 +1,20 @@
-# Projet python pour la data science
+### Projet python pour la data science : "Thématiques des journaux télévisés, audience et parité du temps de parole Homme-femme : des interconnexions ?"
+
+## L'objectif du projet 
+L'objectif de ce projet est de :
+- connaitre l'influence des sujets abordés aux jt sur l'audience des chaînes
+- analyser si certaines thématiques d'actualité changent dans un sens ou dans l'autre la part de femmes à l'antenne
+
+## Pour éxécuter le code : 
+1. charger les paquets nécessaires depuis le terminal avec la commande suivante : pip install -r requirements.txt
+2. Le fichier du rapport est "rapport.ipynb", une fois dessus cliquez sur "Run All"
+3. Les autres fichiers contiennent une documentation qui indique leur rôle, ils sont tous importés dans "rapport.ipynb"
+
+## Les données utilisées : 
+la source de nos données provient de 3 tables toutes issues du site data.gouv et dont on donne un bref aperçu 
+
+
+
 L'objectif de ce projet est de 
 - Connaitre l'influence des sujets abordés aux jt sur l'audience des chaînes
 - Analyser si certaines thématiques d'actualité changent dans un sens ou dans l'autre la part de femmes à l'antenne
