@@ -29,15 +29,6 @@ def load_parite():
     os.remove('temp.csv')
     parite['date'] = pd.to_datetime(parite['date'])
     parite = parite[parite['channel_code'].isin(['TF1', 'M6', 'FR2', 'FR3', 'ART'])]
-    parite['week_day_number'] = parite['week_day'].replace({
-        'Monday': 1,
-        'Tuesday': 2,
-        'Wednesday': 3,
-        'Thursday': 4,
-        'Friday': 5,
-        'Saturday': 6,
-        'Sunday': 7
-    })
     return parite
 
 
