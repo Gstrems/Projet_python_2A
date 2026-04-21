@@ -6,3 +6,4 @@ seaborn
 great_tables
 numpy
 scipy
+statsmodels
